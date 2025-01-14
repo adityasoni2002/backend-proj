@@ -1,20 +1,18 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-
 const app = express();
-const PORT = process.env.PORT || 5000; // Use PORT from environment variables or default to 5000
-
+const PORT = process.env.PORT || 5000; 
 // Middleware
 app.use(cors());
 app.use(express.json());
 
-// MongoDB Atlas Connection String
-const MONGO_URI = "mongodb+srv://adityamavs:Aditya%402002@cluster0.5zjcr.mongodb.net/productsDB?retryWrites=true&w=majority";
-
 // Connect to MongoDB
 mongoose
-  .connect(MONGO_URI)
+  .connect("mongodb://localhost:27017/productsDB", {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
   .then(() => console.log("Connected to MongoDB"))
   .catch((err) => console.log("Failed to connect to MongoDB", err));
 
@@ -30,7 +28,7 @@ const taskSchema = new mongoose.Schema({
   DateOfSale: Date,
 });
 
-const Task = mongoose.model("Task", taskSchema); // This uses the "tasks" collection in "productsDB"
+const Task = mongoose.model("Task", taskSchema);
 
 // API route to fetch tasks with optional filtering
 app.get("/task", async (req, res) => {
@@ -50,11 +48,6 @@ app.get("/task", async (req, res) => {
     res.status(500).send("Error fetching tasks");
   }
 });
-
-// Serve static files in production
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static("task3/build"));
-}
 
 // Start the server
 app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
