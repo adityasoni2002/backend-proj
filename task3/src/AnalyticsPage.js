@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Line } from "react-chartjs-2";
 import axios from "axios";
+import "./App.css"
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from "chart.js";
 
 // Registering Chart.js components
@@ -13,7 +14,7 @@ const AnalyticsPage = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/task")
+      .get("https://final-backend-task.onrender.com/task")
       .then((response) => {
         const data = response.data;
 
@@ -63,6 +64,24 @@ const AnalyticsPage = () => {
 
   return (
     <>
+     <style>{`
+        /* Fixed width for desktop screens */
+        @media (min-width: 1024px) {
+          .chart-container {
+            width: 800px;
+            margin: 0 auto;
+          }
+        }
+
+        /* Responsive for smaller screens */
+        @media (max-width: 1024px) {
+          .chart-container {
+            width: 100%;
+            padding: 0 15px;
+            box-sizing: border-box;
+          }
+        }
+      `}</style>
     <header>
     <nav className="navbar navbar-links">
       <Link to="/">Home</Link> 
@@ -70,19 +89,20 @@ const AnalyticsPage = () => {
       {/* <a href="/info">Info</a> */}
     </nav>
   </header>
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-      <h1>Analytics</h1>
+  <div className="analytics-container">&nbsp;
+  <h1 style={{textAlign:"center"}}>Analytics</h1>
 
-      <div style={{ marginBottom: "20px", width: "60%" }}>
-        <h2 style={{textAlign:"center"}}>Category-Wise Sales Amount (Monthly)</h2> <br></br>
-        <Line data={salesGraphData} options={{ responsive: true }} />
-      </div>
+  <div className="chart-container">
+    <h2 style={{textAlign:"center"}}>Category-Wise Sales Amount (Monthly)</h2>
+    <Line data={salesGraphData} options={{ responsive: true,  }} />
+  </div>
+&nbsp;
+  <div className="chart-container">
+    <h2 style={{textAlign:"center"}}>Total Items in Each Category (Monthly)</h2>
+    <Line data={itemsGraphData} options={{ responsive: true,  }} />
+  </div>
+</div>
 
-      <div style={{ marginBottom: "20px", width: "60%" }}>
-        <h2 style={{textAlign:"center"}}>Total Items in Each Category (Monthly)</h2><br></br>
-        <Line data={itemsGraphData} options={{ responsive: true }} />
-      </div>
-    </div>
     </>
   );
 };
